@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"><meta content="width=device-width,initial-scale=1.0" name="viewport">
+  <title>Dashboard | AE Library Admin</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script>tailwind.config={darkMode:"class",theme:{extend:{colors:{primary:"#002045","primary-container":"#1a365d","secondary-container":"#d0e1fb","surface":"#f7f9fb","surface-container-low":"#f2f4f6","outline-variant":"#c4c6cf",error:"#ba1a1a","error-container":"#ffdad6"},fontFamily:{body:["Manrope"]}}}}</script>
+  <style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}body{font-family:Manrope,sans-serif;background:#f7f9fb}</style>
+</head>
+<body class="text-slate-900">
+
+<aside class="h-screen w-64 bg-white border-r border-slate-200 fixed left-0 top-0 flex flex-col z-40 shadow-sm">
+  <div class="p-6 border-b border-slate-100">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-white text-lg">menu_book</span></div>
+      <div><p class="font-black text-primary text-sm tracking-tight">AE Library</p><p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">Admin</p></div>
+    </div>
+  </div>
+  <nav class="flex-1 p-4 space-y-1">
+    <a href="admin_dashboard.html"    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold bg-primary/10 text-primary"><span class="material-symbols-outlined text-base">dashboard</span>Dashboard</a>
+    <a href="admin_books.html"        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined text-base">menu_book</span>Books</a>
+    <a href="admin_members.html"      class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined text-base">group</span>Members</a>
+    <a href="admin_transactions.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined text-base">receipt_long</span>Transactions</a>
+    <a href="admin_staff.html"        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined text-base">badge</span>Staff</a>
+    <a href="admin_settings.html"     class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors"><span class="material-symbols-outlined text-base">settings</span>Settings</a>
+  </nav>
+  <div class="p-4 border-t border-slate-100">
+    <button onclick="sessionStorage.clear();window.location.href='index.html'" class="flex items-center gap-3 px-4 py-2.5 w-full rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">
+      <span class="material-symbols-outlined text-base">logout</span>Sign Out
+    </button>
+  </div>
+</aside>
+
+<div class="ml-64 min-h-screen">
+  <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm sticky top-0 z-30 px-8 py-4 flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-black text-primary tracking-tight">Library OS</h1>
+      <p class="text-xs text-slate-400 font-medium">Admin Control Centre</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <span class="text-sm font-bold text-slate-600" data-user-name>Admin</span>
+      <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-black" id="avatar">A</div>
+    </div>
+  </header>
+
+  <main class="p-8 max-w-7xl mx-auto">
+    <div class="mb-8">
+      <h2 class="text-3xl font-black text-primary mb-1">Library Overview</h2>
+      <p class="text-slate-500 text-sm">Real-time statistics and system activity.</p>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:-translate-y-0.5 transition-transform">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-3"><span class="material-symbols-outlined text-lg">library_books</span></div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Books</p>
+        <h3 id="s-books" class="text-2xl font-black text-primary mt-1">—</h3>
+      </div>
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:-translate-y-0.5 transition-transform">
+        <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center mb-3"><span class="material-symbols-outlined text-lg">groups</span></div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Members</p>
+        <h3 id="s-members" class="text-2xl font-black text-primary mt-1">—</h3>
+      </div>
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:-translate-y-0.5 transition-transform">
+        <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-700 flex items-center justify-center mb-3"><span class="material-symbols-outlined text-lg">outbound</span></div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Loans</p>
+        <h3 id="s-loans" class="text-2xl font-black text-primary mt-1">—</h3>
+      </div>
+      <div class="bg-white p-6 rounded-xl border border-red-100 border-l-4 border-l-red-500 shadow-sm hover:-translate-y-0.5 transition-transform">
+        <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center mb-3"><span class="material-symbols-outlined text-lg">schedule</span></div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Overdue</p>
+        <h3 id="s-overdue" class="text-2xl font-black text-red-600 mt-1">—</h3>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Recent Activity -->
+      <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+          <h4 class="font-bold text-primary">Recent Activity</h4>
+          <a href="admin_transactions.html" class="text-xs font-semibold text-blue-600 hover:underline">View All →</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Member</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Book</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Staff</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Type</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Date</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="activity-tbody">
+              <tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Quick links + usage -->
+      <div class="space-y-6">
+        <div class="bg-primary rounded-xl p-6 text-white">
+          <h4 class="font-bold mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-base">bolt</span>Quick Actions</h4>
+          <div class="space-y-2">
+            <a href="admin_books.html" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-semibold"><span class="material-symbols-outlined text-base">menu_book</span>Manage Books</a>
+            <a href="admin_members.html" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-semibold"><span class="material-symbols-outlined text-base">group</span>Manage Members</a>
+            <a href="admin_transactions.html" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-semibold"><span class="material-symbols-outlined text-base">receipt_long</span>View Transactions</a>
+            <a href="admin_staff.html" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-semibold"><span class="material-symbols-outlined text-base">badge</span>Staff Management</a>
+            <a href="admin_settings.html" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-semibold"><span class="material-symbols-outlined text-base">settings</span>Settings</a>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          <h4 class="font-bold text-primary mb-5">Collection Usage</h4>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between mb-1.5">
+                <span class="text-sm font-medium text-slate-600">Available</span>
+                <span id="pct-avail" class="text-sm font-black text-primary">—</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5"><div id="bar-avail" class="bg-primary h-full rounded-full transition-all duration-700" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1.5">
+                <span class="text-sm font-medium text-slate-600">Lent Out</span>
+                <span id="pct-lent" class="text-sm font-black text-orange-600">—</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5"><div id="bar-lent" class="bg-orange-400 h-full rounded-full transition-all duration-700" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1.5">
+                <span class="text-sm font-medium text-slate-600">Overdue</span>
+                <span id="pct-od" class="text-sm font-black text-red-600">—</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5"><div id="bar-od" class="bg-red-500 h-full rounded-full transition-all duration-700" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="admin-api.js"></script>
+<script>
+  wireNav('dashboard');
+
+  // Load admin name from backend (persistent)
+  async function loadAdminName() {
+    try {
+      const res = await apiFetch('/admin/profile');
+      const name = res.name || 'Admin';
+      sessionStorage.setItem('ae_admin_user', name);
+      document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = name);
+      const initials = name.trim().split(' ').slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+      document.getElementById('avatar').textContent = initials || 'A';
+    } catch(e) {
+      const name = sessionStorage.getItem('ae_admin_user') || 'Admin';
+      document.querySelectorAll('[data-user-name]').forEach(el => el.textContent = name);
+    }
+  }
+  loadAdminName();
+
+  async function loadDashboard() {
+    try {
+      const [bRes, mRes, txRes] = await Promise.all([
+        BooksAPI.getAll(), MembersAPI.getAll(), TxnAPI.getAll()
+      ]);
+      const books   = bRes.data   || [];
+      const members = mRes.data   || [];
+      const txns    = txRes.data  || [];
+
+      const totalQty  = books.reduce((s,b)=>s+b.quantity, 0);
+      const availQty  = books.reduce((s,b)=>s+b.available, 0);
+      const issued    = txns.filter(t=>t.status==='issued').length;
+      const overdue   = txns.filter(t=>t.status==='issued' && new Date(t.due_date+'T00:00:00')<new Date()).length;
+
+      document.getElementById('s-books').textContent   = totalQty.toLocaleString();
+      document.getElementById('s-members').textContent = members.length.toLocaleString();
+      document.getElementById('s-loans').textContent   = issued.toLocaleString();
+      document.getElementById('s-overdue').textContent = overdue.toLocaleString();
+
+      // Progress bars
+      const availPct = totalQty ? Math.round(availQty/totalQty*100) : 0;
+      const lentPct  = totalQty ? Math.round((totalQty-availQty)/totalQty*100) : 0;
+      const odPct    = issued   ? Math.round(overdue/issued*100) : 0;
+      document.getElementById('pct-avail').textContent=availPct+'%';
+      document.getElementById('pct-lent').textContent=lentPct+'%';
+      document.getElementById('pct-od').textContent=odPct+'%';
+      document.getElementById('bar-avail').style.width=availPct+'%';
+      document.getElementById('bar-lent').style.width=lentPct+'%';
+      document.getElementById('bar-od').style.width=odPct+'%';
+
+      // Recent activity table — last 8 transactions
+      const recent = txns.slice(0,8);
+      const tbody = document.getElementById('activity-tbody');
+      if (!recent.length) {
+        tbody.innerHTML='<tr><td colspan="5" class="px-6 py-10 text-center text-slate-400">No transactions yet.</td></tr>'; return;
+      }
+      const isOd = t => t.status==='issued' && new Date(t.due_date+'T00:00:00')<new Date();
+      const bgCols=['bg-blue-100 text-blue-900','bg-indigo-100 text-indigo-900','bg-slate-100 text-slate-700'];
+      tbody.innerHTML = recent.map((t,i)=>{
+        const od = isOd(t);
+        let sc,sl;
+        if(t.status==='returned'){sc='bg-green-50 text-green-700';sl='Returned';}
+        else if(od){sc='bg-red-50 text-red-700';sl='Overdue';}
+        else{sc='bg-blue-50 text-blue-700';sl='Checked Out';}
+        const bg=bgCols[i%bgCols.length];
+        const init=t.member_name.trim().split(' ').slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+        const staffDisplay = t.staff_name && t.staff_name!=='Unknown' ? t.staff_name : '—';
+        return `<tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-6 py-4"><div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-full ${bg} flex items-center justify-center text-xs font-bold flex-shrink-0">${init}</div>
+            <span class="text-sm font-semibold text-slate-900 truncate max-w-[100px]">${esc(t.member_name)}</span>
+          </div></td>
+          <td class="px-6 py-4 text-sm text-slate-600 truncate max-w-[120px]">${esc(t.book_title)}</td>
+          <td class="px-6 py-4 text-sm text-slate-500 truncate max-w-[90px]">${esc(staffDisplay)}</td>
+          <td class="px-6 py-4 text-xs font-bold uppercase ${t.status==='issued'?'text-blue-600':'text-slate-400'}">${t.status==='issued'?'Issue':'Return'}</td>
+          <td class="px-6 py-4 text-sm text-slate-500">${fmtDate(t.issue_date)}</td>
+          <td class="px-6 py-4 text-center"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${sc}"><span class="w-1.5 h-1.5 rounded-full ${sl==='Returned'?'bg-green-600':od?'bg-red-600':'bg-blue-600'}"></span>${sl}</span></td>
+        </tr>`;
+      }).join('');
+
+    } catch(e) {
+      toast('Cannot reach backend. Is library_server.exe running?','error');
+    }
+  }
+
+  loadDashboard();
+</script>
+</body></html>

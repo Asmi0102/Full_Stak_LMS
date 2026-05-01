@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"><meta content="width=device-width,initial-scale=1.0" name="viewport">
+  <title>Dashboard | AE Library</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script>tailwind.config={darkMode:"class",theme:{extend:{colors:{primary:"#002045","primary-container":"#1a365d","primary-fixed":"#d6e3ff","secondary-container":"#d5e0f7","surface":"#f7fafc","surface-container-low":"#f1f4f6","surface-container":"#ebeef0","on-surface-variant":"#43474e","outline-variant":"#c4c6cf",error:"#ba1a1a","error-container":"#ffdad6","on-error-container":"#93000a"},fontFamily:{body:["Inter"]}}}}</script>
+  <style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}body{font-family:Inter,sans-serif;background:#f7fafc}</style>
+</head>
+<body class="text-slate-900">
+
+<aside class="h-screen w-64 border-r fixed left-0 top-0 bg-slate-50 border-slate-200 z-50 flex flex-col py-6">
+  <div class="px-6 mb-8"><h1 class="text-lg font-black text-blue-900 tracking-tight">AE Library</h1><p class="text-xs font-medium text-slate-500 uppercase tracking-widest">Staff Portal</p></div>
+  <nav class="flex-1 space-y-1">
+    <a href="staff_dashboard.html" class="flex items-center px-4 py-3 gap-3 bg-white text-blue-900 border-l-4 border-blue-900 shadow-sm text-sm font-medium"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+    <a href="staff_books.html"     class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 text-sm font-medium"><span class="material-symbols-outlined">menu_book</span>Books</a>
+    <a href="staff_members.html"   class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 text-sm font-medium"><span class="material-symbols-outlined">group</span>Members</a>
+    <a href="staff_issue_return.html" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 text-sm font-medium"><span class="material-symbols-outlined">swap_horiz</span>Issue / Return</a>
+    <a href="staff_transactions.html" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 text-sm font-medium"><span class="material-symbols-outlined">receipt_long</span>Transactions</a>
+  </nav>
+  <div class="mt-auto px-4 border-t border-slate-200 pt-4">
+    <a href="staff_settings.html" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 text-sm font-medium"><span class="material-symbols-outlined">settings</span>Settings</a>
+    <button onclick="sessionStorage.clear();window.location.href='index.html'" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 w-full text-sm font-medium"><span class="material-symbols-outlined">logout</span>Sign Out</button>
+  </div>
+</aside>
+
+<main class="ml-64 min-h-screen">
+  <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm flex items-center justify-between px-6 py-3 sticky top-0 z-40">
+    <div class="flex items-center gap-4">
+      <span class="text-xl font-bold text-slate-900 tracking-tight">Library OS</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-sm font-bold text-slate-700" id="hdr-user">Librarian</span>
+      <div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white text-xs font-black" id="hdr-avatar">L</div>
+    </div>
+  </header>
+
+  <div class="p-8 max-w-7xl mx-auto">
+    <div class="mb-8">
+      <h2 class="text-3xl font-black text-primary mb-1">Library Overview</h2>
+      <p class="text-slate-500 text-sm">Real-time statistics for today's operations.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:-translate-y-0.5 transition-transform">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center mb-3"><span class="material-symbols-outlined">library_books</span></div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Books</p>
+        <h3 id="s-books" class="text-2xl font-black text-primary mt-1">—</h3>
+      </div>
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:-translate-y-0.5 transition-transform">
+        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center mb-3"><span class="material-symbols-outlined">book_online</span></div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Available</p>
+        <h3 id="s-avail" class="text-2xl font-black text-emerald-600 mt-1">—</h3>
+      </div>
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:-translate-y-0.5 transition-transform">
+        <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-700 flex items-center justify-center mb-3"><span class="material-symbols-outlined">outbound</span></div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Active Loans</p>
+        <h3 id="s-loans" class="text-2xl font-black text-orange-600 mt-1">—</h3>
+      </div>
+      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:-translate-y-0.5 transition-transform">
+        <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center mb-3"><span class="material-symbols-outlined">groups</span></div>
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Members</p>
+        <h3 id="s-members" class="text-2xl font-black text-primary mt-1">—</h3>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Recent Activity -->
+      <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+          <h4 class="font-semibold text-primary">Recent Activity</h4>
+          <a href="staff_transactions.html" class="text-xs font-semibold text-blue-600 hover:underline">View All →</a>
+        </div>
+        <div id="activity-wrap">
+          <p class="p-6 text-slate-400 text-sm">Loading…</p>
+        </div>
+      </div>
+
+      <!-- Quick links + usage -->
+      <div class="space-y-6">
+        <div class="bg-primary rounded-xl p-6 text-white">
+          <h4 class="font-semibold mb-4 flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-base">bolt</span>Quick Actions</h4>
+          <div class="space-y-2">
+            <a href="staff_books.html"        class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-medium"><span class="material-symbols-outlined text-base">menu_book</span>Manage Books</a>
+            <a href="staff_members.html"      class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-medium"><span class="material-symbols-outlined text-base">group</span>Manage Members</a>
+            <a href="staff_issue_return.html" class="flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-colors text-sm font-medium"><span class="material-symbols-outlined text-base">swap_horiz</span>Issue / Return</a>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+          <h4 class="font-semibold text-primary mb-4 text-sm">Collection Usage</h4>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between mb-1"><span class="text-xs font-medium text-slate-600">Available</span><span id="pct-avail" class="text-xs font-black text-primary">—</span></div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5"><div id="bar-avail" class="bg-primary h-full rounded-full transition-all duration-700" style="width:0%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-1"><span class="text-xs font-medium text-slate-600">Lent Out</span><span id="pct-lent" class="text-xs font-black text-orange-600">—</span></div>
+              <div class="w-full bg-slate-100 rounded-full h-1.5"><div id="bar-lent" class="bg-orange-400 h-full rounded-full transition-all duration-700" style="width:0%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="api.js"></script>
+<script>
+  // Set user info from session
+  const user = sessionStorage.getItem('ae_user') || 'Librarian';
+  document.getElementById('hdr-user').textContent = user;
+  const initials = user.trim().split(' ').slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+  document.getElementById('hdr-avatar').textContent = initials || 'L';
+
+  async function loadDashboard() {
+    try {
+      const [bRes, mRes, txRes] = await Promise.all([
+        BooksAPI.getAll(), MembersAPI.getAll(), TransactionsAPI.getAll()
+      ]);
+      const books   = bRes.data   || [];
+      const members = mRes.data   || [];
+      const txns    = txRes.data  || [];
+
+      const totalQty = books.reduce((s,b)=>s+b.quantity, 0);
+      const availQty = books.reduce((s,b)=>s+b.available, 0);
+      const loans    = txns.filter(t=>t.status==='issued').length;
+
+      document.getElementById('s-books').textContent   = totalQty.toLocaleString();
+      document.getElementById('s-avail').textContent   = availQty.toLocaleString();
+      document.getElementById('s-loans').textContent   = loans.toLocaleString();
+      document.getElementById('s-members').textContent = members.length.toLocaleString();
+
+      const availPct = totalQty ? Math.round(availQty/totalQty*100) : 0;
+      const lentPct  = totalQty ? Math.round((totalQty-availQty)/totalQty*100) : 0;
+      document.getElementById('pct-avail').textContent = availPct+'%';
+      document.getElementById('pct-lent').textContent  = lentPct+'%';
+      document.getElementById('bar-avail').style.width = availPct+'%';
+      document.getElementById('bar-lent').style.width  = lentPct+'%';
+
+      // Recent activity
+      const recent = txns.slice(0, 6);
+      const wrap   = document.getElementById('activity-wrap');
+      if (!recent.length) {
+        wrap.innerHTML = '<p class="p-6 text-slate-400 text-sm">No transactions yet.</p>';
+        return;
+      }
+      const isOd = t => t.status==='issued' && new Date(t.due_date+'T00:00:00') < new Date();
+      const bgCols = ['bg-blue-100 text-blue-900','bg-indigo-100 text-indigo-900','bg-slate-100 text-slate-700'];
+      wrap.innerHTML = '<div class="divide-y divide-slate-50">' +
+        recent.map((t,i) => {
+          const od = isOd(t);
+          let sc, sl;
+          if(t.status==='returned'){sc='text-green-600';sl='Returned';}
+          else if(od){sc='text-red-600';sl='Overdue';}
+          else{sc='text-blue-600';sl='Issued';}
+          const bg = bgCols[i%bgCols.length];
+          const init = t.member_name.trim().split(' ').slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+          return `<div class="p-5 flex items-start gap-4 hover:bg-slate-50 transition-colors">
+            <div class="w-9 h-9 rounded-full ${bg} flex items-center justify-center text-xs font-bold flex-shrink-0">${init}</div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2 mb-0.5">
+                <p class="text-sm font-semibold text-slate-900 truncate">${escHtml(t.book_title)}</p>
+                <span class="text-xs ${sc} font-bold flex-shrink-0">${sl}</span>
+              </div>
+              <p class="text-xs text-slate-500">${escHtml(t.member_name)} · ${fmtDate(t.issue_date)}</p>
+            </div>
+          </div>`;
+        }).join('') + '</div>';
+
+    } catch(e) {
+      showToast('Cannot reach backend. Is library_server.exe running?', 'error');
+    }
+  }
+
+  loadDashboard();
+</script>
+</body></html>
