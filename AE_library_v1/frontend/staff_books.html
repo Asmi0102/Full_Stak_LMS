@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"><meta content="width=device-width,initial-scale=1.0" name="viewport">
+  <title>Books | AE Library</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script>tailwind.config={darkMode:"class",theme:{extend:{colors:{primary:"#002045","primary-container":"#1a365d","primary-fixed":"#d6e3ff","secondary-container":"#d5e0f7","surface":"#f7fafc","surface-container-low":"#f1f4f6","surface-container":"#ebeef0","on-surface-variant":"#43474e","outline-variant":"#c4c6cf",error:"#ba1a1a","error-container":"#ffdad6","on-error-container":"#93000a"},fontFamily:{body:["Inter"]},fontSize:{"label-sm":["12px",{fontWeight:"600",letterSpacing:"0.05em"}],"label-md":["14px",{fontWeight:"500"}],"headline-md":["20px",{fontWeight:"600"}],"display-xl":["36px",{fontWeight:"700",letterSpacing:"-0.02em"}]}}}}</script>
+  <style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}body{font-family:Inter,sans-serif;background:#f7fafc}</style>
+</head>
+<body class="text-on-surface">
+<aside class="h-screen w-64 border-r fixed left-0 top-0 bg-slate-50 border-slate-200 z-50 flex flex-col py-6">
+  <div class="px-6 mb-8"><h1 class="text-lg font-black text-blue-900 tracking-tight">AE Library</h1><p class="text-xs font-medium text-slate-500 uppercase tracking-widest">Staff Portal</p></div>
+  <nav class="flex-1 space-y-1">
+    <a href="staff_dashboard.html" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 transition-all text-sm font-medium"><span class="material-symbols-outlined">dashboard</span>Dashboard</a>
+    <a href="staff_books.html" class="flex items-center px-4 py-3 gap-3 bg-white text-blue-900 border-l-4 border-blue-900 shadow-sm text-sm font-medium"><span class="material-symbols-outlined">menu_book</span>Books</a>
+    <a href="staff_members.html" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 transition-all text-sm font-medium"><span class="material-symbols-outlined">group</span>Members</a>
+    <a href="staff_issue_return.html" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 transition-all text-sm font-medium"><span class="material-symbols-outlined">swap_horiz</span>Issue / Return</a>
+    <a href="staff_transactions.html" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 transition-all text-sm font-medium"><span class="material-symbols-outlined">receipt_long</span>Transactions</a>
+  </nav>
+  <div class="mt-auto px-4 border-t border-slate-200 pt-4">
+    <button onclick="sessionStorage.clear();window.location.href='index.html'" class="flex items-center px-4 py-3 gap-3 text-slate-600 hover:bg-slate-100 w-full text-sm font-medium"><span class="material-symbols-outlined">logout</span>Sign Out</button>
+  </div>
+</aside>
+
+<div class="ml-64 min-h-screen flex flex-col">
+  <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm flex items-center justify-between px-6 py-3 sticky top-0 z-40">
+    <div class="flex items-center gap-4 flex-1">
+      <div class="relative w-full max-w-sm">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+        <input id="search-input" class="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-full text-sm border-none focus:ring-2 focus:ring-blue-900/20 transition-all" placeholder="Search title, author or genre…" type="text">
+      </div>
+    </div>
+    <span class="text-sm font-bold text-slate-700 ml-4" id="hdr-user">Librarian</span>
+  </header>
+
+  <main class="flex-1 p-8">
+    <div class="flex justify-between items-end mb-8">
+      <div>
+        <h2 class="text-3xl font-black text-primary mb-1">Book Catalog</h2>
+        <p class="text-slate-500 text-sm">Add and manage the library collection.</p>
+      </div>
+      <div class="bg-white px-6 py-4 rounded-xl border border-slate-200 shadow-sm text-center">
+        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Total Titles</p>
+        <p id="total-count" class="text-2xl font-black text-primary">—</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <!-- Add Form -->
+      <div class="lg:col-span-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm sticky top-24">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="material-symbols-outlined text-primary">library_add</span>
+          <h3 class="font-semibold text-primary text-lg">Add New Book</h3>
+        </div>
+        <div id="add-msg" class="hidden p-3 rounded-lg text-sm font-medium mb-4"></div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Book Title *</label>
+            <input id="book-title" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-blue-900 focus:ring-1 focus:ring-blue-900/20 transition-all outline-none" placeholder="e.g. The Great Gatsby" type="text">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Author *</label>
+            <input id="book-author" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-blue-900 focus:ring-1 focus:ring-blue-900/20 transition-all outline-none" placeholder="e.g. F. Scott Fitzgerald" type="text">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Genre *</label>
+            <select id="book-genre" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-blue-900 focus:ring-1 focus:ring-blue-900/20 transition-all outline-none bg-white">
+              <option value="">-- Select Genre --</option>
+              <option>Fiction</option><option>Non-Fiction</option><option>Science</option>
+              <option>Technology</option><option>History</option><option>Biography</option>
+              <option>Philosophy</option><option>Mathematics</option><option>Literature</option>
+              <option>Self-Help</option><option>Children</option><option>Reference</option><option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Quantity *</label>
+            <input id="book-qty" class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-blue-900 focus:ring-1 focus:ring-blue-900/20 transition-all outline-none" min="1" placeholder="1" type="number" value="1">
+          </div>
+          <button onclick="addBook()" class="w-full mt-2 bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-sm">save</span>Register Book
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="lg:col-span-8 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="font-semibold text-primary">Catalog Database</h3>
+          <button onclick="loadBooks()" class="p-2 hover:bg-slate-50 text-slate-400 rounded transition-colors" title="Refresh"><span class="material-symbols-outlined text-base">refresh</span></button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Book Details</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Genre</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Qty</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="books-tbody" class="divide-y divide-slate-100">
+              <tr><td colspan="5" class="px-6 py-10 text-center text-slate-400">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="px-6 py-4 bg-slate-50 border-t flex items-center justify-between">
+          <p id="pagination-info" class="text-xs text-slate-500">—</p>
+          <div class="flex gap-2">
+            <button id="prev-btn" onclick="changePage(-1)" class="px-3 py-1 border border-slate-200 rounded bg-white text-sm hover:bg-slate-50 disabled:opacity-40" disabled>Previous</button>
+            <button id="next-btn" onclick="changePage(1)"  class="px-3 py-1 border border-slate-200 rounded bg-white text-sm hover:bg-slate-50 disabled:opacity-40" disabled>Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div id="del-modal" class="hidden fixed inset-0 bg-black/40 z-[100] flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center">
+    <div class="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4"><span class="material-symbols-outlined text-red-600 text-3xl">delete_forever</span></div>
+    <h3 class="text-lg font-bold text-slate-900 mb-2">Remove Book?</h3>
+    <p id="del-book-name" class="text-slate-500 text-sm mb-6">This cannot be undone.</p>
+    <div class="flex gap-3">
+      <button onclick="closeDelModal()" class="flex-1 py-3 border border-slate-200 rounded-xl text-slate-700 hover:bg-slate-50 font-medium">Cancel</button>
+      <button onclick="confirmDelete()" class="flex-1 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 font-medium active:scale-95">Remove</button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script>
+  document.getElementById('hdr-user').textContent = sessionStorage.getItem('ae_user') || 'Librarian';
+
+  const PAGE = 10;
+  let allBooks = [], currentPage = 1, pendingDeleteId = null;
+
+  async function loadBooks(query = '') {
+    try {
+      const res = query ? await BooksAPI.search(query) : await BooksAPI.getAll();
+      allBooks = res.data || [];
+      document.getElementById('total-count').textContent = allBooks.reduce((s,b)=>s+b.quantity,0).toLocaleString();
+      currentPage = 1;
+      renderTable();
+    } catch(e) { showToast('Failed to load books — is server running?','error'); }
+  }
+
+  function renderTable() {
+    const start = (currentPage-1)*PAGE, slice = allBooks.slice(start, start+PAGE), total = allBooks.length;
+    const tbody = document.getElementById('books-tbody');
+    if (!slice.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">No books found. Add your first book using the form.</td></tr>';
+    } else {
+      tbody.innerHTML = slice.map(b => {
+        const a = b.available > 0;
+        const status = a
+          ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-xs font-bold rounded-full"><span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>Available (${b.available}/${b.quantity})</span>`
+          : `<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-700 text-xs font-bold rounded-full"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>All Issued</span>`;
+        return `<tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-6 py-4"><div class="flex items-center gap-3">
+            <div class="w-9 h-12 bg-blue-50 rounded text-primary text-xs font-black flex items-center justify-center shadow-sm">#${b.id}</div>
+            <div><p class="font-semibold text-primary text-sm">${escHtml(b.title)}</p><p class="text-xs text-slate-500">${escHtml(b.author)}</p></div>
+          </div></td>
+          <td class="px-6 py-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">${escHtml(b.genre||'—')}</span></td>
+          <td class="px-6 py-4 text-sm text-slate-600">${b.quantity}</td>
+          <td class="px-6 py-4">${status}</td>
+          <td class="px-6 py-4 text-right">
+            <button onclick="openDelModal(${b.id},'${escHtml(b.title).replace(/'/g,"\\'")}',${b.available},${b.quantity})" class="p-2 text-slate-400 hover:text-red-600 transition-colors rounded-full hover:bg-red-50">
+              <span class="material-symbols-outlined text-lg">delete</span>
+            </button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+    document.getElementById('pagination-info').textContent = total ? `Showing ${Math.min(start+1,total)}–${Math.min(start+PAGE,total)} of ${total} books` : 'No books';
+    document.getElementById('prev-btn').disabled = currentPage <= 1;
+    document.getElementById('next-btn').disabled = start+PAGE >= total;
+  }
+
+  function changePage(d) { currentPage += d; renderTable(); }
+
+  async function addBook() {
+    const title  = document.getElementById('book-title').value.trim();
+    const author = document.getElementById('book-author').value.trim();
+    const genre  = document.getElementById('book-genre').value;
+    const qty    = parseInt(document.getElementById('book-qty').value) || 0;
+    const msg    = document.getElementById('add-msg');
+
+    if (!title || !author || !genre || qty < 1) {
+      msg.className = 'block p-3 rounded-lg text-sm font-medium bg-red-50 text-red-700';
+      msg.textContent = 'All fields are required and quantity must be ≥ 1.';
+      return;
+    }
+    try {
+      const res = await BooksAPI.add({ title, author, genre, quantity: qty });
+      if (res.success) {
+        msg.className = 'block p-3 rounded-lg text-sm font-medium bg-green-50 text-green-700';
+        msg.textContent = `✓ "${title}" registered successfully!`;
+        ['book-title','book-author'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('book-genre').value = '';
+        document.getElementById('book-qty').value = '1';
+        showToast(`"${title}" added to catalog`);
+        loadBooks(document.getElementById('search-input').value);
+      } else {
+        msg.className = 'block p-3 rounded-lg text-sm font-medium bg-red-50 text-red-700';
+        msg.textContent = res.message || 'Failed to add book.';
+      }
+    } catch(e) { showToast('Server error.','error'); }
+  }
+
+  function openDelModal(id, title, avail, qty) {
+    if (qty - avail > 0) { showToast(`Cannot remove — ${qty-avail} cop${qty-avail===1?'y':'ies'} still issued.`,'warn'); return; }
+    pendingDeleteId = id;
+    document.getElementById('del-book-name').textContent = `"${title}" will be permanently removed.`;
+    document.getElementById('del-modal').classList.remove('hidden');
+  }
+  function closeDelModal() { document.getElementById('del-modal').classList.add('hidden'); pendingDeleteId = null; }
+
+  async function confirmDelete() {
+    if (!pendingDeleteId) return;
+    try {
+      const res = await BooksAPI.remove(pendingDeleteId);
+      closeDelModal();
+      if (res.success) { showToast('Book removed.'); loadBooks(); }
+      else showToast(res.message || 'Could not remove.','warn');
+    } catch(e) { showToast('Server error.','error'); }
+  }
+
+  let searchTimer;
+  document.getElementById('search-input').addEventListener('input', e => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => loadBooks(e.target.value.trim()), 350);
+  });
+
+  loadBooks();
+</script>
+</body></html>

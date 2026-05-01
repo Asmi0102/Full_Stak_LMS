@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"><meta content="width=device-width,initial-scale=1.0" name="viewport">
+  <title>Members | AE Library Admin</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script>tailwind.config={darkMode:"class",theme:{extend:{colors:{primary:"#002045","primary-container":"#1a365d","surface":"#f7f9fb",error:"#ba1a1a","error-container":"#ffdad6"},fontFamily:{body:["Manrope"]}}}}</script>
+  <style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}body{font-family:Manrope,sans-serif;background:#f7f9fb}</style>
+</head>
+<body class="text-slate-900">
+<aside class="h-screen w-64 bg-white border-r border-slate-200 fixed left-0 top-0 flex flex-col z-40 shadow-sm">
+  <div class="p-6 border-b border-slate-100"><div class="flex items-center gap-3"><div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-white text-lg">menu_book</span></div><div><p class="font-black text-primary text-sm">AE Library</p><p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">Admin</p></div></div></div>
+  <nav class="flex-1 p-4 space-y-1">
+    <a href="admin_dashboard.html"    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">dashboard</span>Dashboard</a>
+    <a href="admin_books.html"        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">menu_book</span>Books</a>
+    <a href="admin_members.html"      class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold bg-primary/10 text-primary"><span class="material-symbols-outlined text-base">group</span>Members</a>
+    <a href="admin_transactions.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">receipt_long</span>Transactions</a>
+    <a href="admin_staff.html"        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">badge</span>Staff</a>
+    <a href="admin_settings.html"     class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">settings</span>Settings</a>
+  </nav>
+  <div class="p-4 border-t border-slate-100"><button onclick="sessionStorage.clear();window.location.href='index.html'" class="flex items-center gap-3 px-4 py-2.5 w-full rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">logout</span>Sign Out</button></div>
+</aside>
+
+<div class="ml-64 min-h-screen">
+  <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm sticky top-0 z-30 px-8 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-4 flex-1">
+      <h1 class="text-xl font-black text-primary">Members</h1>
+      <div class="relative ml-4">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+        <input id="srch" class="pl-10 pr-4 py-2 bg-slate-100 rounded-full text-sm w-64 border-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search name or ID…" type="text">
+      </div>
+    </div>
+    <span class="text-sm font-bold text-slate-600 ml-4" data-user-name>Admin</span>
+  </header>
+
+  <main class="p-8 max-w-7xl mx-auto">
+    <div class="flex justify-between items-end mb-8">
+      <div><h2 class="text-3xl font-black text-primary mb-1">Member Directory</h2><p class="text-slate-500 text-sm">All registered library members.</p></div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm"><p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Total Members</p><h3 id="s-total" class="text-2xl font-black text-primary">—</h3></div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm"><p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Outstanding Fines</p><h3 id="s-fines" class="text-2xl font-black text-amber-600">—</h3></div>
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm"><p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Members with Fines</p><h3 id="s-fined" class="text-2xl font-black text-red-600">—</h3></div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-primary">Member List</h3>
+        <button onclick="loadMembers()" class="p-1.5 hover:bg-slate-50 rounded text-slate-400"><span class="material-symbols-outlined text-base">refresh</span></button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Member</th>
+              <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Membership ID</th>
+              <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Fine</th>
+              <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Joined</th>
+              <th class="px-6 py-3 text-xs font-bold text-slate-500 uppercase text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="members-tbody"><tr><td colspan="5" class="px-6 py-10 text-center text-slate-400">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="px-6 py-4 bg-slate-50 border-t flex items-center justify-between">
+        <span id="page-info" class="text-xs text-slate-500">—</span>
+        <div class="flex gap-2">
+          <button id="prev-m" onclick="mPage(-1)" class="px-3 py-1 border border-slate-200 rounded bg-white text-sm hover:bg-slate-50 disabled:opacity-40" disabled>Previous</button>
+          <button id="next-m" onclick="mPage(1)"  class="px-3 py-1 border border-slate-200 rounded bg-white text-sm hover:bg-slate-50 disabled:opacity-40" disabled>Next</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="admin-api.js"></script>
+<script>
+  wireNav('members');
+  const PAGE=10; let all=[], pg=1;
+  const bg=['bg-blue-100 text-blue-900','bg-indigo-100 text-indigo-900','bg-slate-100 text-slate-700','bg-purple-100 text-purple-900'];
+
+  async function loadMembers() {
+    try {
+      const res=await MembersAPI.getAll(); all=res.data||[];
+      const tf=all.reduce((s,m)=>s+m.total_fine,0);
+      document.getElementById('s-total').textContent=all.length.toLocaleString();
+      document.getElementById('s-fines').textContent='₹'+tf.toFixed(2);
+      document.getElementById('s-fined').textContent=all.filter(m=>m.total_fine>0).length;
+      pg=1; render(document.getElementById('srch').value.toLowerCase());
+    } catch(e) { toast('Failed to load members.','error'); }
+  }
+
+  function render(f='') {
+    const filtered=f?all.filter(m=>m.name.toLowerCase().includes(f)||m.membership_number.toLowerCase().includes(f)):all;
+    const total=filtered.length, start=(pg-1)*PAGE, slice=filtered.slice(start,start+PAGE);
+    const tbody=document.getElementById('members-tbody');
+    if (!slice.length) { tbody.innerHTML=`<tr><td colspan="5" class="px-6 py-12 text-center text-slate-400">${f?'No results.':'No members yet.'}</td></tr>`; }
+    else {
+      tbody.innerHTML=slice.map((m,i)=>{
+        const hasFine=m.total_fine>0;
+        const fc=hasFine?`<div class="flex items-center gap-2"><span class="text-red-600 font-bold text-sm">₹${m.total_fine.toFixed(2)}</span><button onclick="clearFine(${m.id},'${esc(m.name)}',${m.total_fine})" class="text-xs text-amber-600 underline hover:text-amber-800">Clear</button></div>`:`<span class="text-slate-400 text-sm">₹0.00</span>`;
+        const b=bg[i%bg.length];
+        return `<tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full ${b} flex items-center justify-center font-bold text-sm">${getInitials(m.name)}</div><div><p class="font-semibold text-primary text-sm">${esc(m.name)}</p><p class="text-xs text-slate-500">${esc(m.email)}</p></div></div></td>
+          <td class="px-6 py-4 font-mono text-sm text-primary">${m.membership_number}</td>
+          <td class="px-6 py-4">${fc}</td>
+          <td class="px-6 py-4 text-sm text-slate-500">${fmtDate(m.joined_date)}</td>
+          <td class="px-6 py-4 text-right"><button onclick="doRemove(${m.id},'${esc(m.name)}')" class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"><span class="material-symbols-outlined text-lg">person_remove</span></button></td>
+        </tr>`;
+      }).join('');
+    }
+    document.getElementById('page-info').textContent=total?`Showing ${Math.min(start+1,total)}–${Math.min(start+PAGE,total)} of ${total}`:'No members';
+    document.getElementById('prev-m').disabled=pg<=1;
+    document.getElementById('next-m').disabled=start+PAGE>=total;
+  }
+
+  function mPage(d){pg+=d;render(document.getElementById('srch').value.toLowerCase());}
+
+  async function clearFine(id,name,fine) {
+    const ok=await confirm_dlg('Clear Fine?',`Clear ₹${fine.toFixed(2)} fine for ${name}?`);
+    if(!ok)return;
+    try{const r=await SettingsAPI.clearFine(id);if(r.success){toast('Fine cleared.');loadMembers();}else toast(r.message,'warn');}
+    catch(e){toast('Error.','error');}
+  }
+
+  async function doRemove(id,name) {
+    const ok=await confirm_dlg('Remove Member?',`"${name}" will be permanently removed. They must have no active loans.`);
+    if(!ok)return;
+    try{const r=await MembersAPI.remove(id);if(r.success){toast('Member removed.');loadMembers();}else toast(r.message,'warn');}
+    catch(e){toast('Error.','error');}
+  }
+
+  let t;
+  document.getElementById('srch').addEventListener('input',e=>{clearTimeout(t);t=setTimeout(()=>{pg=1;render(e.target.value.toLowerCase());},300);});
+  loadMembers();
+</script>
+</body></html>
