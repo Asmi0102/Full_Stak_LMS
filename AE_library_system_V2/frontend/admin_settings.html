@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"><meta content="width=device-width,initial-scale=1.0" name="viewport">
+  <title>Settings | AE Library Admin</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script>tailwind.config={darkMode:"class",theme:{extend:{colors:{primary:"#002045","primary-container":"#1a365d","surface":"#f7f9fb","outline-variant":"#c4c6cf"},fontFamily:{body:["Manrope"]}}}}</script>
+  <style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}body{font-family:Manrope,sans-serif;background:#f7f9fb}</style>
+</head>
+<body class="text-slate-900">
+<aside class="h-screen w-64 bg-white border-r border-slate-200 fixed left-0 top-0 flex flex-col z-40 shadow-sm">
+  <div class="p-6 border-b border-slate-100">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-white text-lg">menu_book</span></div>
+      <div><p class="font-black text-primary text-sm tracking-tight">AE Library</p><p class="text-[10px] text-slate-400 font-semibold uppercase tracking-widest">Admin</p></div>
+    </div>
+  </div>
+  <nav class="flex-1 p-4 space-y-1">
+    <a href="admin_dashboard.html"    class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">dashboard</span>Dashboard</a>
+    <a href="admin_books.html"        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">menu_book</span>Books</a>
+    <a href="admin_members.html"      class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">group</span>Members</a>
+    <a href="admin_transactions.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">receipt_long</span>Transactions</a>
+    <a href="admin_staff.html"        class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50"><span class="material-symbols-outlined text-base">badge</span>Staff</a>
+    <a href="admin_settings.html"     class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold bg-primary/10 text-primary"><span class="material-symbols-outlined text-base">settings</span>Settings</a>
+  </nav>
+  <div class="p-4 border-t border-slate-100">
+    <button onclick="sessionStorage.clear();window.location.href='index.html'" class="flex items-center gap-3 px-4 py-2.5 w-full rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50">
+      <span class="material-symbols-outlined text-base">logout</span>Sign Out
+    </button>
+  </div>
+</aside>
+
+<div class="ml-64 min-h-screen">
+  <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm sticky top-0 z-30 px-8 py-4 flex items-center justify-between">
+    <h1 class="text-xl font-black text-primary">Settings</h1>
+    <div class="flex items-center gap-3">
+      <span class="text-sm font-bold text-slate-600" id="hdr-name">Admin</span>
+      <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-black" id="hdr-avatar">A</div>
+    </div>
+  </header>
+
+  <main class="p-8 max-w-5xl mx-auto space-y-8">
+    <div>
+      <h2 class="text-3xl font-black text-primary mb-1">System Settings</h2>
+      <p class="text-slate-500 text-sm">Manage admin profile and fine configuration. All changes persist permanently.</p>
+    </div>
+
+    <!-- Admin Profile — backend-persisted -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary">manage_accounts</span>
+        <h3 class="font-bold text-primary">Admin Profile</h3>
+        <span class="ml-auto text-xs text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-xs">cloud_done</span>Saved to database</span>
+      </div>
+      <div class="p-6">
+        <div id="profile-msg" class="hidden p-3 rounded-lg text-sm font-semibold mb-4"></div>
+
+        <!-- Profile preview -->
+        <div class="flex items-center gap-5 mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-black" id="profile-avatar-big">A</div>
+          <div>
+            <p class="font-black text-primary text-lg" id="profile-name-display">Admin</p>
+            <p class="text-slate-500 text-sm" id="profile-email-display">admin@aelibrary.com</p>
+            <p class="text-xs text-slate-400 mt-0.5">Login username: <span id="profile-username-display" class="font-mono font-semibold text-slate-600">admin</span> · Admin Portal</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Display Name *</label>
+            <input id="new-name" type="text" placeholder="Admin"
+              class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Email Address *</label>
+            <input id="new-email" type="email" placeholder="admin@aelibrary.com"
+              class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Current Password <span class="text-slate-400 font-normal normal-case">(required to change password)</span></label>
+            <input id="current-pwd" type="password" placeholder="Enter current password"
+              class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">New Password <span class="text-slate-400 font-normal normal-case">(leave blank to keep)</span></label>
+            <input id="new-pwd" type="password" placeholder="Min 6 characters"
+              class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none">
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button onclick="saveProfile()" class="px-6 py-2.5 bg-primary text-white rounded-lg font-semibold hover:opacity-90 active:scale-95 transition-all text-sm">Save Profile</button>
+          <button onclick="loadProfile()" class="px-6 py-2.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 font-semibold transition-all text-sm">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Username — backend-persisted -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary">account_circle</span>
+        <h3 class="font-bold text-primary">Change Login Username</h3>
+        <span class="ml-auto text-xs text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-xs">cloud_done</span>Saved to database</span>
+      </div>
+      <div class="p-6">
+        <div id="username-msg" class="hidden p-3 rounded-lg text-sm font-semibold mb-4"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">New Username *</label>
+            <input id="new-username" type="text" placeholder="e.g. libraryAdmin"
+              class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none">
+            <p class="text-xs text-slate-400 mt-1">Min 3 chars · Letters, numbers, dots, underscores, hyphens only.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Current Password * <span class="text-slate-400 font-normal normal-case">(required to confirm)</span></label>
+            <input id="username-pwd" type="password" placeholder="Enter current password to confirm"
+              class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none">
+          </div>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 flex gap-2">
+          <span class="material-symbols-outlined text-amber-600 text-base mt-0.5">warning</span>
+          <p class="text-amber-800 text-xs">After changing your username, you must use the new username to log in next time.</p>
+        </div>
+        <button onclick="saveUsername()" class="px-6 py-2.5 bg-primary text-white rounded-lg font-semibold hover:opacity-90 active:scale-95 transition-all text-sm">Update Username</button>
+      </div>
+    </div>
+
+    <!-- Fine & Lending Rules — backend-persisted -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary">payments</span>
+        <h3 class="font-bold text-primary">Fine & Lending Rules</h3>
+        <span class="ml-auto text-xs text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-xs">cloud_done</span>Applied system-wide</span>
+      </div>
+      <div class="p-6">
+        <div id="fine-msg" class="hidden p-3 rounded-lg text-sm font-semibold mb-4"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Fine Rate per Day (₹)</label>
+            <input id="fine-rate" type="number" min="0" step="0.5"
+              class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none">
+            <p class="text-xs text-slate-400 mt-1">Charged per day after due date.</p>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Default Borrow Period (days)</label>
+            <input id="allowed-days" type="number" min="1" step="1"
+              class="w-full px-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none">
+            <p class="text-xs text-slate-400 mt-1">Default loan period before fine applies.</p>
+          </div>
+        </div>
+        <div class="flex gap-3">
+          <button onclick="saveFineSettings()" class="px-6 py-2.5 bg-primary text-white rounded-lg font-semibold hover:opacity-90 active:scale-95 transition-all text-sm">Save Rules</button>
+          <button onclick="loadFineSettings()" class="px-6 py-2.5 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 font-semibold transition-all text-sm">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Export -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+        <span class="material-symbols-outlined text-primary">database</span>
+        <h3 class="font-bold text-primary">Data & Export</h3>
+      </div>
+      <div class="p-6 flex flex-wrap gap-4">
+        <button onclick="exportLogs()" class="flex items-center gap-2 px-5 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all">
+          <span class="material-symbols-outlined text-base">download</span>Export Transactions
+        </button>
+        <button onclick="exportMembers()" class="flex items-center gap-2 px-5 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all">
+          <span class="material-symbols-outlined text-base">group_export</span>Export Members
+        </button>
+        <a href="admin_transactions.html" class="flex items-center gap-2 px-5 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-all">
+          <span class="material-symbols-outlined text-base">payments</span>Manage Fines →
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="admin-api.js"></script>
+<script>
+  wireNav('settings');
+
+  // ── Load admin profile from BACKEND (persistent) ─────────────────────────
+  async function loadProfile() {
+    try {
+      const res      = await apiFetch('/admin/profile');
+      const name     = res.name     || 'Admin';
+      const email    = res.email    || 'admin@aelibrary.com';
+      const username = res.username || 'admin';
+
+      // Update display
+      document.getElementById('profile-name-display').textContent     = name;
+      document.getElementById('profile-email-display').textContent    = email;
+      document.getElementById('profile-username-display').textContent = username;
+      document.getElementById('hdr-name').textContent                 = name;
+      const initials = name.trim().split(' ').slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+      document.getElementById('profile-avatar-big').textContent = initials || 'A';
+      document.getElementById('hdr-avatar').textContent         = initials || 'A';
+
+      // Pre-fill form
+      document.getElementById('new-name').value    = name;
+      document.getElementById('new-email').value   = email;
+      document.getElementById('current-pwd').value = '';
+      document.getElementById('new-pwd').value     = '';
+
+      // Update sessionStorage so other pages show the right name
+      sessionStorage.setItem('ae_admin_user', name);
+      sessionStorage.setItem('ae_admin_username', username);
+      document.getElementById('profile-msg').style.display = 'none';
+
+    } catch(e) { toast('Failed to load profile.','error'); }
+  }
+
+  // ── Change Username ────────────────────────────────────────────────────────
+  async function saveUsername() {
+    const newUsername  = document.getElementById('new-username').value.trim();
+    const confirmPwd   = document.getElementById('username-pwd').value;
+    const msg          = document.getElementById('username-msg');
+
+    if (!newUsername) {
+      msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#ffdad6;color:#93000a;margin-bottom:16px';
+      msg.textContent = 'Please enter a new username.'; return;
+    }
+    if (!confirmPwd) {
+      msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#ffdad6;color:#93000a;margin-bottom:16px';
+      msg.textContent = 'Please enter your current password to confirm.'; return;
+    }
+
+    try {
+      const res = await apiFetch('/admin/update-username', {
+        method: 'POST',
+        body: JSON.stringify({ new_username: newUsername, current_password: confirmPwd })
+      });
+
+      if (res.success) {
+        msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#dcfce7;color:#166534;margin-bottom:16px';
+        msg.textContent = `✓ Username changed to "${res.username}". Use this to log in next time.`;
+        document.getElementById('new-username').value = '';
+        document.getElementById('username-pwd').value = '';
+        document.getElementById('profile-username-display').textContent = res.username;
+        sessionStorage.setItem('ae_admin_username', res.username);
+        toast(`Username updated to "${res.username}"`);
+      } else {
+        msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#ffdad6;color:#93000a;margin-bottom:16px';
+        msg.textContent = res.message || 'Failed to update username.';
+      }
+    } catch(e) { toast('Server error.','error'); }
+  }
+
+  async function saveProfile() {
+    const name        = document.getElementById('new-name').value.trim();
+    const email       = document.getElementById('new-email').value.trim();
+    const currentPwd  = document.getElementById('current-pwd').value;
+    const newPwd      = document.getElementById('new-pwd').value;
+    const msg         = document.getElementById('profile-msg');
+
+    if (!name || !email) {
+      msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#ffdad6;color:#93000a;margin-bottom:16px';
+      msg.textContent = 'Name and email are required.'; return;
+    }
+    if (newPwd && !currentPwd) {
+      msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#ffdad6;color:#93000a;margin-bottom:16px';
+      msg.textContent = 'Enter your current password to set a new one.'; return;
+    }
+
+    try {
+      const res = await apiFetch('/admin/update-profile', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, new_password: newPwd, current_password: currentPwd })
+      });
+      if (res.success) {
+        msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#dcfce7;color:#166534;margin-bottom:16px';
+        msg.textContent = '✓ Profile saved permanently.';
+        toast('Admin profile updated.');
+        loadProfile();
+      } else {
+        msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#ffdad6;color:#93000a;margin-bottom:16px';
+        msg.textContent = res.message || 'Failed to save.';
+      }
+    } catch(e) { toast('Server error.','error'); }
+  }
+
+  // ── Fine Settings — backend-persisted ─────────────────────────────────────
+  async function loadFineSettings() {
+    try {
+      const res = await SettingsAPI.get();
+      if (res.data) {
+        document.getElementById('fine-rate').value    = res.data.fine_rate_per_day;
+        document.getElementById('allowed-days').value = res.data.allowed_days;
+      }
+      document.getElementById('fine-msg').style.display = 'none';
+    } catch(e) { toast('Failed to load fine settings.','error'); }
+  }
+
+  async function saveFineSettings() {
+    const rate = parseFloat(document.getElementById('fine-rate').value);
+    const days = parseInt(document.getElementById('allowed-days').value);
+    const msg  = document.getElementById('fine-msg');
+
+    if (isNaN(rate) || rate < 0) {
+      msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#ffdad6;color:#93000a;margin-bottom:16px';
+      msg.textContent = 'Enter a valid fine rate (≥ 0).'; return;
+    }
+    if (isNaN(days) || days < 1) {
+      msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#ffdad6;color:#93000a;margin-bottom:16px';
+      msg.textContent = 'Borrow period must be ≥ 1 day.'; return;
+    }
+
+    try {
+      await Promise.all([
+        SettingsAPI.setFineRate(rate),
+        SettingsAPI.setAllowedDays(days)
+      ]);
+      msg.style.cssText = 'display:block;padding:12px;border-radius:8px;font-size:13px;font-weight:600;background:#dcfce7;color:#166534;margin-bottom:16px';
+      msg.textContent = `✓ Rules saved: ₹${rate}/day, ${days}-day borrow period. Applied to all future transactions.`;
+      toast('Fine rules updated system-wide.');
+    } catch(e) { toast('Failed to save.','error'); }
+  }
+
+  // ── Data Export ────────────────────────────────────────────────────────────
+  async function exportLogs() {
+    try {
+      const res  = await TxnAPI.getAll();
+      const txns = res.data || [];
+      const rows = [['ID','Book','Member','Staff','Issue Date','Due Date','Return Date','Status','Fine']];
+      txns.forEach(t=>rows.push([t.id,t.book_title,t.member_name,t.staff_name||'',t.issue_date,t.due_date,t.return_date||'',t.status,t.fine]));
+      dlCSV(rows,'ae_transactions_'+new Date().toISOString().slice(0,10)+'.csv');
+      toast('Transactions exported.');
+    } catch(e) { toast('Export failed.','error'); }
+  }
+
+  async function exportMembers() {
+    try {
+      const res     = await MembersAPI.getAll();
+      const members = res.data || [];
+      const rows    = [['ID','Membership No','Name','Email','Phone','Total Fine','Joined']];
+      members.forEach(m=>rows.push([m.id,m.membership_number,m.name,m.email,m.phone,m.total_fine,m.joined_date]));
+      dlCSV(rows,'ae_members_'+new Date().toISOString().slice(0,10)+'.csv');
+      toast('Members exported.');
+    } catch(e) { toast('Export failed.','error'); }
+  }
+
+  function dlCSV(rows, filename) {
+    const csv = rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+    const a   = document.createElement('a');
+    a.href    = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.download = filename; a.click();
+  }
+
+  // Load on page open
+  loadProfile();
+  loadFineSettings();
+</script>
+</body>
+</html>
